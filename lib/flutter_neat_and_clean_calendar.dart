@@ -377,6 +377,7 @@ class _CalendarState extends State<Calendar> {
                   return Container(
                     height: 300,
                     child: CupertinoDatePicker(
+                      backgroundColor: Colors.white,
                       mode: CupertinoDatePickerMode.date,
                       initialDateTime: _selectedDate,
                       minimumDate: widget.datePickerConfig?.firstDate ?? DateTime(DateTime.now().year - 100, 1),
