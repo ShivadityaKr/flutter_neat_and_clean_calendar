@@ -288,7 +288,7 @@ class _CalendarState extends State<Calendar> {
 
     if (!widget.hideTodayIcon) {
       todayIcon = GestureDetector(
-        child: Text(widget.todayButtonText),
+        child: Text("widget.todayButtonText"),
         onTap: resetToToday,
       );
     } else {
@@ -297,7 +297,8 @@ class _CalendarState extends State<Calendar> {
 
     if (widget.datePickerType != null && widget.datePickerType != DatePickerType.hidden) {
       jumpDateIcon = GestureDetector(
-        child: Icon(Icons.date_range_outlined),
+        child: Icon(Icons.date_range_outlined, color: Colors.amber,),
+        // Get this Tap
         onTap: () {
           if (widget.datePickerType == DatePickerType.year) {
             // show year picker
@@ -368,12 +369,46 @@ class _CalendarState extends State<Calendar> {
           child: Column(
             children: <Widget>[
               todayIcon ?? Container(),
-              Text(
-                displayMonth,
-                style: widget.displayMonthTextStyle ??
-                    TextStyle(
-                      fontSize: 20.0,
+              InkWell(
+                onTap:() {
+                  showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Select Year"),
+                  content: Container(
+                    // Need to use container to add size constraint.
+                    width: 300,
+                    height: 300,
+                    child: YearPicker(
+                      firstDate: widget.datePickerConfig?.firstDate ?? DateTime(DateTime.now().year - 100, 1),
+                      lastDate: widget.datePickerConfig?.lastDate ?? DateTime(DateTime.now().year + 100, 1),
+                      initialDate: widget.datePickerConfig?.initialDate ?? DateTime.now(),
+                      // save the selected date to _selectedDate DateTime variable.
+                      // It's used to set the previous selected date when
+                      // re-showing the dialog.
+                      selectedDate: _selectedDate,
+                      onChanged: (DateTime dateTime) {
+                        // close the dialog when year is selected.
+                        onJumpToDateSelected(dateTime);
+                        Navigator.pop(context);
+
+                        // Do something with the dateTime selected.
+                        // Remember that you need to use dateTime.year to get the year
+                      },
                     ),
+                  ),
+                );
+              },
+            );
+                },
+                child: Text(
+                  displayMonth,
+                  style: widget.displayMonthTextStyle ??
+                      TextStyle(
+                        fontSize: 20.0,
+                      ),
+                ),
               ),
             ],
           ),
